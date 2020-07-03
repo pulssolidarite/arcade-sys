@@ -5,6 +5,7 @@ import store from "./store";
 import axios from "axios";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'vueperslides/dist/vueperslides.css'
 import "./assets/css/theme.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -16,17 +17,19 @@ import {
   faLink,
   faEuroSign,
   faPlay,
-  faVideo,
+  faVideo
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import VueProgressBar from "vue-progressbar";
-import VueYouTube from "vue-youtube";
+import VueYoutube from "vue-youtube";
+
+Vue.use(VueYoutube);
 
 // Loading bar stuff
 Vue.use(VueProgressBar, {
   color: "rgb(91, 184, 93)",
   failedColor: "red",
-  height: "3px",
+  height: "3px"
 });
 
 // Font Awesome Stuff
@@ -54,10 +57,8 @@ if (token) {
   Vue.prototype.$http.defaults.headers.common["Authorization"] = token;
 }
 
-Vue.use(VueYouTube);
-
 new Vue({
   router,
   store,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");

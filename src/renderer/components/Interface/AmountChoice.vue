@@ -1,110 +1,81 @@
 <template>
   <div class="component">
-    <div class="d-flex flex-column h-100">
-      <div
-        class="bg-gradient-half position-absolute w-100 h-100 d-flex flex-column"
-      >
-        <div class="flex-1 h-100 bg-gradient position-relative"></div>
-        <div class="flex-1 h-100 bg-white position-relative">
-          <div class="with-split"></div>
+      <div class="view amount-choice">
+
+        <!-- /////// -->
+        <div class="content">
+          
+          <div class="content-amount" style="width : 150px; margin-left:50%; height: 50px">
+            <span class="h2 amount">{{ session.amount }}€</span>
+          </div>
+
+          <div class="slider">
+            <!-- <div class="container mb-5 pb-3 mt-2 text-center" id="content-slidebar"> -->
+            <div class="content-slidebar">
+              <div class="progress" style="height: 30px;">
+                <div
+                  class="progress-bar bg-warning"
+                  role="progressbar"
+                  :style="{ width: (this.session.amount/30)*100 + '%' }"
+                  :aria-valuenow="this.session.amount"
+                  aria-valuemin="0"
+                  :aria-valuemax="30"
+                >
+                </div>
+              </div>
+            </div>
+            <!-- </div> -->
+            
+            <span class="more-but" @click="simulate_right">+</span>
+            <span class="less-but" @click="simulate_left">-</span>
+
+            <div class="content-line" id="content-line">
+              <!-- <span class="line1" :style="{ width: (this.session.amount/30)*100 + '%' }"></span> -->
+              <span class="line1" id="line1"></span>
+              <span class="line2" :style="{ left: (this.session.amount/30)*100 + '%' }"></span>
+              <span class="line3" id="line3"></span>
+            </div>
+          </div>
+            <!-- amount DETAILS -->
+              <div class="amount-detail">
+                <div class="logo-rounded">
+                      <img
+                        :src="getActionPhoto(session.campaign, session.amount)"
+                        :alt="session.campaign.name"
+                        height="125"
+                        class="rounded"
+                      />
+                    </div>
+                      <span class="mt-3">{{
+                        getAction(session.campaign, session.amount)
+                      }}</span>
+
+              </div>
+            <!-- \amount DETAILS -->
         </div>
+
+        
+
+        <!-- /////// -->
+        <!-- GAMEPAD -->
+        <helpGamepad @simulate_a="simulate_a" @simulate_b="simulate_b" @simulate_left="simulate_left" @simulate_right="simulate_right"/>
       </div>
-      <div class="view position-relative d-flex flex-column align-items-center">
-        <div class="ribbon left" style="width: 380px; height: 110px;">
-          <span class="h5 mr-3 mb-4">3 - Prêt à être solidaire?</span>
-        </div>
-        <div
-          class="row d-flex align-items-center justify-content-around mt-5 pt-5 w-100"
-        >
-          <span class="col-8 offset-2 h3 text-uppercase text-center"
-            >100% est reversé à l'association</span
-          >
-          <div class="col-2">
-            <div class="logo-circle">
-              <img :src="session.campaign.logo" :alt="session.campaign.name" />
-            </div>
-          </div>
-        </div>
-        <div class="container px-5 my-5 h-100">
-          <div class="row d-flex align-items-start justify-content-between">
-            <div
-              v-for="(amount, index) in amounts"
-              :key="index"
-              :class="[
-                'amount-wrap',
-                'col',
-                'd-flex',
-                'flex-column',
-                'align-items-center'
-              ]"
-            >
-              <div class="logo-rounded">
-                <img
-                  :src="getActionPhoto(session.campaign, amount)"
-                  :alt="session.campaign.name"
-                  height="125"
-                  class="rounded"
-                />
-              </div>
-              <div
-                :class="[
-                  choosenIndexOf == index ? 'selected' : '',
-                  'amount',
-                  'mt-3',
-                  'd-flex',
-                  'flex-column',
-                  'p-3'
-                ]"
-              >
-                <span class="h2 text-center mt-3">{{ amount }}€</span>
-                <span class="mt-3">{{
-                  getAction(session.campaign, amount)
-                }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="big-gamepad bg-gradient d-flex px-4 py-2">
-          <div
-            class="d-flex align-items-center justify-content-between flex-1 py-2 px-3"
-          >
-            <img src="@/assets/img/gamepad.svg" width="60" />
-            <div class="g-buttons ml-4">
-              <div class="row mb-1">
-                <span class="g-btn">X</span>
-                <span class="g-btn">Y</span>
-                <span class="g-btn">L</span>
-              </div>
-              <div class="row">
-                <span :class="['g-btn', a ? 'clicked' : '']">A</span>
-                <span :class="['g-btn', b ? 'clicked' : '']">B</span>
-                <span class="g-btn">R</span>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex align-items-center justify-content-between ml-5">
-            <span><span class="g-btn">A</span>Valider</span>
-            <span><span class="g-btn">B</span>Retour</span>
-          </div>
-        </div>
-        <div
-          class="small-btn-gamepad d-flex align-items-center justify-content-center p-4 mb-3 pr-5"
-        >
-          <span><span class="g-btn">A</span>Valider</span>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
+import helpGamepad from '@/components/helpGamepad.vue';
+
 export default {
   name: "AmountChoice",
+  components: {helpGamepad},
   props: ["session"],
   data: function() {
     return {
       choosenIndexOf: 2,
-      amounts: [1, 5, 10, 20, 30]
+      amounts: [1, 5, 10, 20, 30],
+      value: 1,
+      max: 100
     };
   },
   computed: {
@@ -159,6 +130,48 @@ export default {
     }
   },
   methods: {
+    line_right() {
+      var line3 = document.getElementById("line3");
+      if (this.session.amount == 30) {
+        line3.style.width = "100%";
+      }
+      else
+      {
+        line3.style.width = "0%";
+      }
+    },
+    line_left() {
+      var line1 = document.getElementById("line1");
+      switch (this.session.amount) {
+        case 1 : line1.style.width ="30%";
+                 line1.style.left = "3.1%";
+                break;
+        case 5 : line1.style.width ="25%";
+                 line1.style.left = "16.8%";
+                break;
+        case 10 : line1.style.width ="5%";
+                  line1.style.left = "33%";
+                break;
+        default : line1.style.width = "0%";
+                break; 
+      }
+    },
+    simulate_a() {
+      this.proceed();
+    },
+    simulate_b() {
+      this.$emit("lastView");
+    },
+    simulate_left() {
+        if (this.amounts[this.choosenIndexOf - 1]) {
+          this.chooseAmount(this.choosenIndexOf - 1);
+        }
+    },
+    simulate_right() {
+        if (this.amounts[this.choosenIndexOf + 1]) {
+          this.chooseAmount(this.choosenIndexOf + 1);
+        }
+    },
     getAction: function(campaign, amount) {
       if (amount == 1) {
         return campaign.text1;
@@ -199,6 +212,9 @@ export default {
         amount: this.amounts[this.choosenIndexOf],
         indexOf: this.choosenIndexOf + 1
       });
+      console.log("amount = "+ this.amounts[this.choosenIndexOf])
+      this.line_right();
+      this.line_left();
     },
     proceed: function() {
       if (this.choosenIndexOf != null) {
@@ -214,3 +230,124 @@ export default {
   }
 };
 </script>
+
+
+<style scoped>
+
+.content {
+  position: relative;
+  width : 100%; 
+  height:80%; 
+  margin-top:8%;
+}
+
+.amount-detail {
+  margin-left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(0, 140, 255) ;
+  border : solid 3px rgb(33, 29, 255);
+  border-radius: 15px;
+  width: 30vw;
+  z-index: 4;
+}
+
+.slider {
+  width: 58%;
+  margin-left: 21%;
+}
+
+.content-line {
+    height: 25vh;
+    top: 19vw;
+}
+
+.content-slidebar {
+  box-shadow: -8px 0px #775CE4,
+              0px -8px #775CE4,
+              8px 0px #372491,
+              0px 8px #372491;
+}
+
+.progress {
+  border-radius: 0;
+}
+
+.line1{
+    position: relative;
+    top: 118.8%;
+    height: 100%;
+    display: block;
+    box-sizing: border-box;
+}
+
+.line2{
+    position: relative;
+    top: -25vh;
+    display: block;
+    box-sizing: border-box;
+}
+
+.line3{
+    position: relative;
+    top: 18.5%;
+    left: 66.5%;
+    height: 100%;
+    display: block;
+    box-sizing: border-box;
+}
+
+
+.line1:before{
+    content: '';
+    position: absolute;
+    width:100%;
+    height: 4px;
+    background: #F3CA30;
+}
+
+.line2:before{
+    content: '';
+    position: absolute;
+    left: -0.3%;
+    width:4px;
+    height: 30vh;
+    background: #F3CA30;
+}
+
+.line3:before{
+    content: '';
+    position: absolute;
+    width: 33.33%;
+    height: 4px;
+    background: #F3CA30;
+}
+
+.progress-bar, .line2, .line1, .line3{
+  transition: all 0.35s ease-in-out;
+}
+
+.more-but {
+  font-size: 3rem; 
+  color : white;
+  width: 30px;
+  position: absolute;
+  text-align: center;
+  top: 2.8%;
+  left: 80%;
+}
+
+.less-but {
+  font-size: 3rem;
+  color : white;
+  width: 30px;
+  position: absolute;
+  text-align: center;
+  top: 2.8%;
+  left: 18%;
+}
+
+
+  
+
+
+</style>
