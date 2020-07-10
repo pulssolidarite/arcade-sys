@@ -1,7 +1,7 @@
 {
   "name": "puls-front",
-  "version": "2.0.2",
-  "author": "Moncef HILALI",
+  "version": "2.0.3",
+  "author": "PULS Impact",
   "description": "A complete system to manage Arcade terminal capable of running retro games with donations management.",
   "license": "GNU AGPLv3",
   "main": "./dist/electron/main.js",
