@@ -19,17 +19,16 @@
             </div>
           </div>
         </div>
-        <div class="container my-3 h-100 text-center">
+        <div class="container my-3 text-center" style="height: 550px">
           <youtube
             :video-id="session.campaign.video"
             :player-vars="playerVars"
-            :fitParent="true"
+            style="width: 100%; height: 100%;"
             ref="youtube"
-            @ready="playerReady()"
-            @playing="playerPlaying()"
-            style="width:320px; height:180px "
+            @ended="playerEnded()"
           ></youtube>
         </div>
+        <!--
         <div class="container mb-5 pb-3 mt-2 text-center">
           <div class="progress mb-5" style="height: 30px;">
             <div
@@ -44,6 +43,7 @@
             </div>
           </div>
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -63,32 +63,19 @@ export default {
         controls: 0,
         modestbranding: 1,
         showinfo: 0,
-        rel: 0
-      }
+        rel: 0,
+      },
     };
   },
   methods: {
-    playerReady: function() {
-      this.$refs.youtube.player.getDuration().then(resp => {
-        this.duration = resp;
-      });
-    },
-    playerPlaying: async function() {
-      var interval = setInterval(() => {
-        this.$refs.youtube.player.getCurrentTime().then(resp => {
-          this.timer = (Math.ceil(resp) / this.duration) * 100;
-        });
-        if (this.timer >= 99) {
-          clearInterval(interval);
-          this.gotoPlay();
-        }
-      }, 100);
+    playerEnded: function() {
+      this.$emit("nextView");
     },
     gotoPlay: function() {
       setInterval(() => {
         this.$emit("nextView");
       }, 600);
-    }
-  }
+    },
+  },
 };
 </script>

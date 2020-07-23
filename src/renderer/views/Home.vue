@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 h-100 bg-gradient"  style="overflow :hidden;"> <!-- overflow for transition -->
+  <div class="w-100 h-100">
     <Error
       class="w-100 h-100 position-absolute"
       style="z-index: 999;"
@@ -9,114 +9,67 @@
       @lastView="lastView"
     ></Error>
 
-    <transition name="step-tr">
-      <stepping :n_step="viewIndex" v-if="viewIndex >=0 && viewIndex<5"/>
-    </transition>
-
-
     <vue-element-loading :active="loading" is-full-screen />
     <div class="w-100 h-100" v-if="!loading">
-      <transition name="mytr" mode="out-in">
-        <!-- SCREENSAVER -->
-        <Welcom
-          @error="handleError"
-          @nextView="nextView"
-          v-if="viewIndex == -1"
-        ></Welcom>
+      <!-- FIRST VIEW -->
+      <Start
+        :campaigns="campaigns"
+        :games="games"
+        :session="session"
+        @startSession="startSession"
+        @saveGame="saveGame"
+        @saveCampaign="saveCampaign"
+        @error="handleError"
+        @nextView="nextView"
+        v-if="viewIndex == 0"
+      ></Start>
 
-        <!-- FIRST VIEW -->
-        <Start
-          :games="games"
-          :session="session"
-          @saveGame="saveGame"
-          @error="handleError"
-          @nextView="nextView"
-          v-if="viewIndex == 0"
-        ></Start>
+      <!-- SECOND VIEW -->
+      <AmountChoice
+        :session="session"
+        @saveAmount="saveAmount"
+        @error="handleError"
+        @nextView="nextView"
+        @lastView="lastView"
+        v-if="viewIndex == 1"
+      ></AmountChoice>
 
-        <!-- SECOND VIEW -->
-        <CampaignChoice
-          :campaigns="campaigns"
-          :session="session"
-          @startSession="startSession"
-          @saveCampaign="saveCampaign"
-          @error="handleError"
-          @nextView="nextView"
-          @lastView="lastView"
-          v-if="viewIndex == 1"
-        ></CampaignChoice>
+      <!-- THIRD VIEW -->
+      <Payment
+        :session="session"
+        @savePayment="savePayment"
+        @error="handleError"
+        @nextView="nextView"
+        @lastView="lastView"
+        v-if="viewIndex == 2"
+      ></Payment>
 
-        <!-- THIRD VIEW -->
-        <AmountChoice
-          :session="session"
-          @saveAmount="saveAmount"
-          @error="handleError"
-          @nextView="nextView"
-          @lastView="lastView"
-          v-if="viewIndex == 2"
-        ></AmountChoice>
+      <!-- 4TH VIEW -->
+      <CampaignDetail
+        :session="session"
+        @error="handleError"
+        @nextView="nextView"
+        @lastView="lastView"
+        v-if="viewIndex == 3"
+      ></CampaignDetail>
 
-        <!-- 4TH VIEW -->
-        <Payment
-          :session="session"
-          @savePayment="savePayment"
-          @error="handleError"
-          @nextView="nextView"
-          @lastView="lastView"
-          v-if="viewIndex == 3"
-        ></Payment>
+      <!-- 5TH VIEW -->
+      <Play
+        :session="session"
+        @error="handleError"
+        @nextView="nextView"
+        @lastView="lastView"
+        v-if="viewIndex == 4"
+      ></Play>
 
-        <!-- 4TH VIEW -->
-        <!-- <CampaignDetail
-          :session="session"
-          @error="handleError"
-          @nextView="nextView"
-          @lastView="lastView"
-          v-if="viewIndex == 4"
-        ></CampaignDetail> -->
-        
-        <didactitiel
-          @nextView="nextView"
-          v-if="viewIndex == 4"
-        ></didactitiel>
-
-        <!-- 5TH VIEW -->
-        <Play
-          :session="session"
-          @error="handleError"
-          @nextView="nextView"
-          @lastView="lastView"
-          v-if="viewIndex == 5"
-        ></Play>
-
-        <ticketProposition
-          @error="handleError"
-          @requestTicket="ticket_request"
-          @nextView="nextView"
-          @lastView="lastView"
-          v-if="viewIndex == 6"
-        ></ticketProposition>
-
-        <!-- 6TH VIEW -->
-        <End
-          :session="session"
-          @error="handleError"
-          @home="nextView"
-          @lastView="lastView"
-          @replay="replay"
-          @moreInfo="moreInfo"
-          @ticket_request="ticket_request"
-          v-if="viewIndex == 7"
-        ></End>
-
-        <requestTicket
-          :session="session"
-          @error="handleError"
-          @lastView="view6"
-          @nextView="lastView"
-          v-if="viewIndex == 8"
-        ></requestTicket>
-      </transition>
+      <!-- 6TH VIEW -->
+      <End
+        :session="session"
+        @error="handleError"
+        @nextView="nextView"
+        @lastView="lastView"
+        v-if="viewIndex == 5"
+      ></End>
     </div>
   </div>
 </template>
@@ -124,36 +77,24 @@
 <script>
 import VueElementLoading from "vue-element-loading";
 import Error from "@/components/Interface/Error.vue";
-import Stepping from "@/components/stepping.vue";
-import Welcom from "@/components/Interface/Welcom.vue";
 import Start from "@/components/Interface/Start.vue";
-import CampaignChoice from "@/components/Interface/CampaignChoice.vue";
 import AmountChoice from "@/components/Interface/AmountChoice.vue";
 import Payment from "@/components/Interface/Payment.vue";
-import didactitiel from '@/components/Interface/didactitiel.vue';
 import CampaignDetail from "@/components/Interface/CampaignDetail.vue";
 import Play from "@/components/Interface/Play.vue";
-import ticketProposition from '@/components/Interface/ticketProposition.vue'
 import End from "@/components/Interface/End.vue";
-import requestTicket from "@/components/Interface/requestTicket.vue";
 
 export default {
   name: "Home",
   components: {
     VueElementLoading,
     Error,
-    Stepping,
-    Welcom,
     Start,
-    CampaignChoice,
     AmountChoice,
     Payment,
-    didactitiel,
     CampaignDetail,
     Play,
-    ticketProposition,
     End,
-    requestTicket,
   },
   data: function() {
     return {
@@ -163,8 +104,8 @@ export default {
         title: "",
         errors: {},
       },
-      viewIndex: -1, // Starting index 
-      maxViewIndex: 7,
+      viewIndex: 1,
+      maxViewIndex: 5,
       isAdmin: this.$store.getters.isAdmin,
       isLoggedIn: this.$store.getters.isLoggedIn,
       session: {
@@ -206,9 +147,6 @@ export default {
       this.$router.push("/login");
     }
 
-    // Start timer for return to home 
-    var timeoutHandle = window.setTimeout(() => this.goBackHome(), 10000);
-
     // Loading all the data from API
     this.loading = true;
     this.$store.commit("startListening");
@@ -237,18 +175,6 @@ export default {
         };
         this.loading = false;
       });
-  },
-  computed: {
-    a() {
-      return this.$store.state.gamepad.A;
-    }
-  },
-  watch : {
-    a: function(val) {
-        if (val) {
-            this.resetTimer();
-        }
-    }
   },
   methods: {
     // CHOICE METHODS
@@ -367,32 +293,6 @@ export default {
         title: "",
         errors: [],
       };
-    },
-    goBackHome() {
-        if(this.viewIndex == 5) { // in Game
-            clearTimeout(10000);
-        } else {
-          console.log("timourend 10sec");
-        }
-    },
-    resetTimer(){
-      console.log("reset");
-      window.clearTimeout(timeoutHandle);
-      timeoutHandle = window.setTimeout(() => this.goBackHome(), 10000);
-
-    },
-    replay: function() {
-      this.startSession();
-      this.viewIndex = 2; // 2 if you want to replay from amount choice
-    },
-    moreInfo: function() {
-      // add view for only that? ? 
-    },
-    view6() {
-      this.viewIndex = 6;
-    },
-    ticket_request: function() {
-      this.viewIndex = 8;
     },
     shuffleArray: function(array) {
       for (let i = array.length - 1; i > 0; i--) {
