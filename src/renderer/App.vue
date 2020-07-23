@@ -33,7 +33,7 @@ export default {
   data: function() {
     return {
       gamepads: [],
-      requestID: undefined
+      requestID: null
     };
   },
   created: function() {
