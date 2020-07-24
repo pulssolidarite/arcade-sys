@@ -45,6 +45,9 @@ function createWindow() {
   });
 }
 
+// will be deprecated
+app.allowRendererProcessReuse = false;
+
 app.on("ready", () => {
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
