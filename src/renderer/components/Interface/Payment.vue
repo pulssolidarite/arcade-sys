@@ -66,15 +66,15 @@ export default {
   mounted: function() {
     // IN PRODUCTION UNCOMMENT THIS
     // For paying with PayterTerminal
-    // if (this.session.amount) {
-    //   setTimeout(() => this.pay(this.session.amount), 1000); // Adding a one second timeout to wait for divs to load
-    // } else {
-    //   this.$emit("lastView");
-    // }
+    if (this.session.amount) {
+      setTimeout(() => this.pay(this.session.amount), 15000); // Adding a one second timeout to wait for divs to load
+    } else {
+      this.$emit("lastView");
+    }
 
     // FOR DEV PURPOSE ONLY
     // For skipping payment
-    setTimeout(() => this.skipPayment(this.session.amount), 3000);
+    //setTimeout(() => this.skipPayment(this.session.amount), 3000);
   },
   methods: {
     skipPayment: function(amount) {
@@ -93,11 +93,11 @@ export default {
       this.$emit("savePayment", { payment: this.payment });
     },
     launchPayment: function(amount) {
-      // Here we use Electron Edge JS to execute a C# script (edje-script.csx) along with a Customized Payter DLL.
+      // Here we use Electron Edge JS to execute a C# script (edge-script.csx) along with a Customized Payter DLL.
       // This script only launches a series of functions in the PayPay customized DLL and receives bunch of error code.
       var edge = require("electron-edge-js");
       var pay = edge.func({
-        source: "edje-script.csx",
+        source: "edge-script.csx",
         references: ["PayterPay.dll"],
       });
 

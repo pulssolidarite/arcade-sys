@@ -77,3 +77,8 @@ ts-gen
 # Used to accelerate CI builds
 .depshash
 .depshash-target
+
+# Sass 
+src/renderer/assets/css/dart-sass/sass.bat
+src/renderer/assets/css/dart-sass/src/dart.exe
+src/renderer/assets/css/dart-sass/src/sass.snapshot

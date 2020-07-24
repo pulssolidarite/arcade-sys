@@ -32,7 +32,8 @@ export default {
   name: "App",
   data: function() {
     return {
-      gamepads: []
+      gamepads: [],
+      requestID: null
     };
   },
   created: function() {
@@ -95,7 +96,7 @@ export default {
     gamepadDisconnectionHandler: function(event) {
       this.gamepads.splice(this.gamepads.indexOf(event.gamepad), 1);
       console.log("Gamepad Disconnected: " + event.gamepad.id);
-      cancelAnimationFrame();
+      cancelAnimationFrame(this.requestID);
     },
     scanGamepads: function() {
       return navigator.getGamepads
@@ -161,7 +162,7 @@ export default {
           this.$store.commit("toggleBottom", false);
         }
       }
-      requestAnimationFrame(this.cycle);
+      this.requestID = requestAnimationFrame(this.cycle);
     }
   }
 };
