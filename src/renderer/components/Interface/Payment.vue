@@ -66,15 +66,15 @@ export default {
   mounted: function() {
     // IN PRODUCTION UNCOMMENT THIS
     // For paying with PayterTerminal
-    if (this.session.amount) {
-      setTimeout(() => this.pay(this.session.amount), 15000); // Adding a one second timeout to wait for divs to load
-    } else {
-      this.$emit("lastView");
-    }
+    // if (this.session.amount) {
+    //   setTimeout(() => this.pay(this.session.amount), 15000); // Adding a one second timeout to wait for divs to load
+    // } else {
+    //   this.$emit("lastView");
+    // }
 
     // FOR DEV PURPOSE ONLY
     // For skipping payment
-    //setTimeout(() => this.skipPayment(this.session.amount), 3000);
+    setTimeout(() => this.skipPayment(this.session.amount), 3000);
   },
   methods: {
     skipPayment: function(amount) {
