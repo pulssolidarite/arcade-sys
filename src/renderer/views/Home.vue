@@ -45,13 +45,13 @@
       ></Payment>
 
       <!-- 4TH VIEW -->
-      <CampaignDetail
+      <!-- <CampaignDetail
         :session="session"
         @error="handleError"
         @nextView="nextView"
         @lastView="lastView"
         v-if="viewIndex == 3"
-      ></CampaignDetail>
+      ></CampaignDetail> -->
 
       <!-- 5TH VIEW -->
       <Play
@@ -59,7 +59,7 @@
         @error="handleError"
         @nextView="nextView"
         @lastView="lastView"
-        v-if="viewIndex == 4"
+        v-if="viewIndex == 3"
       ></Play>
 
       <!-- 6TH VIEW -->
@@ -68,7 +68,7 @@
         @error="handleError"
         @nextView="nextView"
         @lastView="lastView"
-        v-if="viewIndex == 5"
+        v-if="viewIndex == 4"
       ></End>
     </div>
   </div>
@@ -105,7 +105,7 @@ export default {
         errors: {},
       },
       viewIndex: 1,
-      maxViewIndex: 5,
+      maxViewIndex: 4,
       isAdmin: this.$store.getters.isAdmin,
       isLoggedIn: this.$store.getters.isLoggedIn,
       session: {
